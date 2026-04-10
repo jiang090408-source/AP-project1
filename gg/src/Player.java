@@ -5,73 +5,84 @@ public class Player {
     private int ATK;
     private int DEF;
     private Weapon myWeapon;
-    private World myWorld;
     private Item myItem;
     private boolean main;
+    private Room location;
 
-
-
-    public Player(String name, int maxHP, int ATK, int DEF, World world, boolean main) {
+    public Player(String name, int maxHP, int ATK, int DEF, boolean main) {
         this.name = name;
         this.maxHP = maxHP;
         this.ATK = ATK;
         this.DEF = DEF;
-        this.myWorld = world;
         this.HP = maxHP;
-        this.main=main;
-    }
-    public int getatk(){
-        return ATK;
-    }
-    public int gethp() {
-        return HP;
-    }
-    public int getdef(){
-        return DEF;
-    }
-    public int getmhp(){
-        return maxHP;
-    }
-    public void sethp(int a){ HP=a;}
-
-    public Weapon getMyWeapon() {
-        return myWeapon;
+        this.main = main;
     }
 
-    public void setWeapon (Weapon weapon){
-        this.myWeapon = weapon;
-        this.ATK+= weapon.getAtk();
-    }
-    public void setItem (Item item){
-        this.myItem = item;
-    }
-    public String getName(){
-        return name;
-    }
-    public static void attack(Player a, Player b){
-        int c = a.getatk();
-        int d = b.getdef();
-        b.HP-=(c-d);
-        if (b.gethp() <0){b.sethp(0);}
-        Weapon.useWeapon(a.getMyWeapon());
-        System.out.println(a.getName()+" attacked "+b.getName()+" and dealt "+(c-d)+"damage! "+b.getName()+" now has "+b.HP+"HP!");
-    }
-    public void useItem(){
-        this.HP+=this.myItem.getheal();
-        this.myItem=null;
-    }
-    public boolean isAlive(){
-        return HP>0;
-    }
-    public void equipWeapon(Weapon a){
-        setWeapon(a);
-    }
-    public void giveItem(Item a){
-            setItem(a);
+    public void attack(Player target) {
+        int damage = this.ATK - target.DEF;
+        if (damage < 0) damage = 1;
+        target.HP -= damage;
+        if (target.HP < 0) target.HP = 0;
+
+        // FIX: weapon durability logic – avoid double subtraction
+        if (myWeapon != null) {
+            if (myWeapon.getDurability() > 0) {
+                myWeapon.use();
+            }
+            if (myWeapon.getDurability() <= 0) {
+                System.out.println(this.name + "'s " + myWeapon.getName() + " broke!");
+                this.ATK -= myWeapon.getAtk();
+                myWeapon = null;
+            }
         }
 
-    public String toString(){
-        return "Name: " + this.name + " | HP: " + this.HP + " | Weapon: " + this.myWeapon +" | Item: " + this.myItem;
+        System.out.println(this.name + " attacked " + target.name + " dealing " + damage + " damage! " +
+                target.name + " HP: " + target.HP);
     }
 
+    public void heal() {
+        if (myItem != null) {
+            int recover = myItem.getheal();
+            this.HP += recover;
+            if (this.HP > maxHP) this.HP = maxHP;
+            System.out.println(this.name + " used " + myItem.getname() + ", recovered " + recover + " HP. Current HP: " + this.HP);
+            myItem = null;
+        } else {
+            System.out.println("No healing item available!");
+        }
+    }
+
+    public void equipWeapon(Weapon w) {
+        if (myWeapon != null) {
+            this.ATK -= myWeapon.getAtk();
+        }
+        myWeapon = w;
+        this.ATK += w.getAtk();
+        System.out.println(this.name + " equipped " + w.getName());
+    }
+
+    public void giveItem(Item i) {
+        myItem = i;
+        System.out.println(this.name + " obtained " + i.getname());
+    }
+
+    public boolean isAlive() { return HP > 0; }
+
+    // Getters and Setters
+    public String getName() { return name; }
+    public int gethp() { return HP; }
+    public int getatk() { return ATK; }
+    public int getdef() { return DEF; }
+    public int getmhp() { return maxHP; }
+    public void sethp(int hp) { this.HP = hp; }
+    public Room getLocation() { return location; }
+    public void setLocation(Room location) { this.location = location; }
+    public Weapon getMyWeapon() { return myWeapon; }
+    public Item getMyItem() { return myItem; }
+    public void setMyItem(Item i) { myItem = i; }
+
+    @Override
+    public String toString() {
+        return name + " [HP:" + HP + "/" + maxHP + " ATK:" + ATK + " DEF:" + DEF + "]";
+    }
 }

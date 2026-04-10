@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>Player.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #7a7e85;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Player.java</font>
+</center></td></tr></table>
+<pre><span class="s0">public class </span><span class="s1">Player </span><span class="s2">{</span>
+    <span class="s0">private </span><span class="s1">String name</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">HP</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">maxHP</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">ATK</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">DEF</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Weapon myWeapon</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Item myItem</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">main</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Room location</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">Player</span><span class="s2">(</span><span class="s1">String name</span><span class="s2">, </span><span class="s0">int </span><span class="s1">maxHP</span><span class="s2">, </span><span class="s0">int </span><span class="s1">ATK</span><span class="s2">, </span><span class="s0">int </span><span class="s1">DEF</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">main</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">= </span><span class="s1">name</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">maxHP </span><span class="s2">= </span><span class="s1">maxHP</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">ATK </span><span class="s2">= </span><span class="s1">ATK</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">DEF </span><span class="s2">= </span><span class="s1">DEF</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">= </span><span class="s1">maxHP</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">main </span><span class="s2">= </span><span class="s1">main</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">attack</span><span class="s2">(</span><span class="s1">Player target</span><span class="s2">) {</span>
+        <span class="s0">int </span><span class="s1">damage </span><span class="s2">= </span><span class="s0">this</span><span class="s2">.</span><span class="s1">ATK </span><span class="s2">- </span><span class="s1">target</span><span class="s2">.</span><span class="s1">DEF</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">damage </span><span class="s2">&lt; </span><span class="s3">0</span><span class="s2">) </span><span class="s1">damage </span><span class="s2">= </span><span class="s3">1</span><span class="s2">;</span>
+        <span class="s1">target</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">-= </span><span class="s1">damage</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">target</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">&lt; </span><span class="s3">0</span><span class="s2">) </span><span class="s1">target</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">= </span><span class="s3">0</span><span class="s2">;</span>
+
+        <span class="s4">// FIX: weapon durability logic – avoid double subtraction</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">myWeapon </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">getDurability</span><span class="s2">() &gt; </span><span class="s3">0</span><span class="s2">) {</span>
+                <span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">use</span><span class="s2">();</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">getDurability</span><span class="s2">() &lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot;'s &quot; </span><span class="s2">+ </span><span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s5">&quot; broke!&quot;</span><span class="s2">);</span>
+                <span class="s0">this</span><span class="s2">.</span><span class="s1">ATK </span><span class="s2">-= </span><span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">getAtk</span><span class="s2">();</span>
+                <span class="s1">myWeapon </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; attacked &quot; </span><span class="s2">+ </span><span class="s1">target</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; dealing &quot; </span><span class="s2">+ </span><span class="s1">damage </span><span class="s2">+ </span><span class="s5">&quot; damage! &quot; </span><span class="s2">+</span>
+                <span class="s1">target</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; HP: &quot; </span><span class="s2">+ </span><span class="s1">target</span><span class="s2">.</span><span class="s1">HP</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">heal</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">myItem </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">int </span><span class="s1">recover </span><span class="s2">= </span><span class="s1">myItem</span><span class="s2">.</span><span class="s1">getheal</span><span class="s2">();</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">+= </span><span class="s1">recover</span><span class="s2">;</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">&gt; </span><span class="s1">maxHP</span><span class="s2">) </span><span class="s0">this</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">= </span><span class="s1">maxHP</span><span class="s2">;</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; used &quot; </span><span class="s2">+ </span><span class="s1">myItem</span><span class="s2">.</span><span class="s1">getname</span><span class="s2">() + </span><span class="s5">&quot;, recovered &quot; </span><span class="s2">+ </span><span class="s1">recover </span><span class="s2">+ </span><span class="s5">&quot; HP. Current HP: &quot; </span><span class="s2">+ </span><span class="s0">this</span><span class="s2">.</span><span class="s1">HP</span><span class="s2">);</span>
+            <span class="s1">myItem </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;No healing item available!&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">equipWeapon</span><span class="s2">(</span><span class="s1">Weapon w</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">myWeapon </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">ATK </span><span class="s2">-= </span><span class="s1">myWeapon</span><span class="s2">.</span><span class="s1">getAtk</span><span class="s2">();</span>
+        <span class="s2">}</span>
+        <span class="s1">myWeapon </span><span class="s2">= </span><span class="s1">w</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">ATK </span><span class="s2">+= </span><span class="s1">w</span><span class="s2">.</span><span class="s1">getAtk</span><span class="s2">();</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; equipped &quot; </span><span class="s2">+ </span><span class="s1">w</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">giveItem</span><span class="s2">(</span><span class="s1">Item i</span><span class="s2">) {</span>
+        <span class="s1">myItem </span><span class="s2">= </span><span class="s1">i</span><span class="s2">;</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; obtained &quot; </span><span class="s2">+ </span><span class="s1">i</span><span class="s2">.</span><span class="s1">getname</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public boolean </span><span class="s1">isAlive</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">HP </span><span class="s2">&gt; </span><span class="s3">0</span><span class="s2">; }</span>
+
+    <span class="s4">// Getters and Setters</span>
+    <span class="s0">public </span><span class="s1">String getName</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">name</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">gethp</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">HP</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getatk</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">ATK</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getdef</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">DEF</span><span class="s2">; }</span>
+    <span class="s0">public int </span><span class="s1">getmhp</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">maxHP</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">sethp</span><span class="s2">(</span><span class="s0">int </span><span class="s1">hp</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">HP </span><span class="s2">= </span><span class="s1">hp</span><span class="s2">; }</span>
+    <span class="s0">public </span><span class="s1">Room getLocation</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">location</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">Room location</span><span class="s2">) { </span><span class="s0">this</span><span class="s2">.</span><span class="s1">location </span><span class="s2">= </span><span class="s1">location</span><span class="s2">; }</span>
+    <span class="s0">public </span><span class="s1">Weapon getMyWeapon</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">myWeapon</span><span class="s2">; }</span>
+    <span class="s0">public </span><span class="s1">Item getMyItem</span><span class="s2">() { </span><span class="s0">return </span><span class="s1">myItem</span><span class="s2">; }</span>
+    <span class="s0">public void </span><span class="s1">setMyItem</span><span class="s2">(</span><span class="s1">Item i</span><span class="s2">) { </span><span class="s1">myItem </span><span class="s2">= </span><span class="s1">i</span><span class="s2">; }</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String toString</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">name </span><span class="s2">+ </span><span class="s5">&quot; [HP:&quot; </span><span class="s2">+ </span><span class="s1">HP </span><span class="s2">+ </span><span class="s5">&quot;/&quot; </span><span class="s2">+ </span><span class="s1">maxHP </span><span class="s2">+ </span><span class="s5">&quot; ATK:&quot; </span><span class="s2">+ </span><span class="s1">ATK </span><span class="s2">+ </span><span class="s5">&quot; DEF:&quot; </span><span class="s2">+ </span><span class="s1">DEF </span><span class="s2">+ </span><span class="s5">&quot;]&quot;</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

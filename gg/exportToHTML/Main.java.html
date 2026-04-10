@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>Main.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Main.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Scanner</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">Main </span><span class="s2">{</span>
+    <span class="s0">private static </span><span class="s1">Scanner scanner </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scanner</span><span class="s2">(</span><span class="s1">System</span><span class="s2">.</span><span class="s1">in</span><span class="s2">);</span>
+    <span class="s0">private static </span><span class="s1">GameMap gameMap</span><span class="s2">;</span>
+    <span class="s0">private static </span><span class="s1">Player hero</span><span class="s2">;</span>
+    <span class="s0">private static boolean </span><span class="s1">inBattle </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+    <span class="s0">private static </span><span class="s1">Player currentEnemy </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+
+    <span class="s0">public static void </span><span class="s1">main</span><span class="s2">(</span><span class="s1">String</span><span class="s2">[] </span><span class="s1">args</span><span class="s2">) {</span>
+        <span class="s1">gameMap </span><span class="s2">= </span><span class="s0">new </span><span class="s1">GameMap</span><span class="s2">(</span><span class="s3">5</span><span class="s2">, </span><span class="s4">&quot;Teyvat&quot;</span><span class="s2">);</span>
+        <span class="s1">hero </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Player</span><span class="s2">(</span><span class="s4">&quot;Hero&quot;</span><span class="s2">, </span><span class="s3">120</span><span class="s2">, </span><span class="s3">18</span><span class="s2">, </span><span class="s3">5</span><span class="s2">, </span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s1">hero</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">gameMap</span><span class="s2">.</span><span class="s1">getRoom</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+
+        <span class="s1">hero</span><span class="s2">.</span><span class="s1">equipWeapon</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Weapon</span><span class="s2">(</span><span class="s4">&quot;Starter Sword&quot;</span><span class="s2">, </span><span class="s3">10</span><span class="s2">, </span><span class="s3">15</span><span class="s2">));</span>
+        <span class="s1">hero</span><span class="s2">.</span><span class="s1">giveItem</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Item</span><span class="s2">(</span><span class="s4">&quot;Health Potion&quot;</span><span class="s2">, </span><span class="s4">&quot;Restores 15 HP&quot;</span><span class="s2">, </span><span class="s3">15</span><span class="s2">));</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;=== Welcome to &quot; </span><span class="s2">+ </span><span class="s1">gameMap</span><span class="s2">.</span><span class="s1">getWorldName</span><span class="s2">() + </span><span class="s4">&quot; ===&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Your goal is to explore the dungeon, defeat all enemies and find the ultimate treasure!&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Type 'help' for commands.</span><span class="s0">\n</span><span class="s4">&quot;</span><span class="s2">);</span>
+
+        <span class="s0">while </span><span class="s2">(</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">isAlive</span><span class="s2">()) {</span>
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">inBattle</span><span class="s2">) {</span>
+                <span class="s1">Room current </span><span class="s2">= </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getLocation</span><span class="s2">();</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;</span><span class="s0">\n</span><span class="s4">Current position: (&quot; </span><span class="s2">+ </span><span class="s1">current</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s4">&quot;,&quot; </span><span class="s2">+ </span><span class="s1">current</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() + </span><span class="s4">&quot;)&quot;</span><span class="s2">);</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">current</span><span class="s2">.</span><span class="s1">getDescription</span><span class="s2">());</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s4">&quot;&gt; &quot;</span><span class="s2">);</span>
+                <span class="s1">String cmd </span><span class="s2">= </span><span class="s1">scanner</span><span class="s2">.</span><span class="s1">nextLine</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">toLowerCase</span><span class="s2">();</span>
+
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;help&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">showHelp</span><span class="s2">();</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;status&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">showStatus</span><span class="s2">();</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;inventory&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">showInventory</span><span class="s2">();</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">startsWith</span><span class="s2">(</span><span class="s4">&quot;move &quot;</span><span class="s2">)) {</span>
+                    <span class="s1">handleMove</span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;quit&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Game over.&quot;</span><span class="s2">);</span>
+                    <span class="s0">return</span><span class="s2">;</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Unknown command. Type 'help'.&quot;</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;</span><span class="s0">\n</span><span class="s4">⚔️ BATTLE MODE ⚔️&quot;</span><span class="s2">);</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Enemy: &quot; </span><span class="s2">+ </span><span class="s1">currentEnemy</span><span class="s2">);</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">);</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s4">&quot;[attack / heal / flee] &gt; &quot;</span><span class="s2">);</span>
+                <span class="s1">String action </span><span class="s2">= </span><span class="s1">scanner</span><span class="s2">.</span><span class="s1">nextLine</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">toLowerCase</span><span class="s2">();</span>
+
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">action</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;attack&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">hero</span><span class="s2">.</span><span class="s1">attack</span><span class="s2">(</span><span class="s1">currentEnemy</span><span class="s2">);</span>
+                    <span class="s0">if </span><span class="s2">(!</span><span class="s1">currentEnemy</span><span class="s2">.</span><span class="s1">isAlive</span><span class="s2">()) {</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You defeated &quot; </span><span class="s2">+ </span><span class="s1">currentEnemy</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s4">&quot;!&quot;</span><span class="s2">);</span>
+                        <span class="s1">Room room </span><span class="s2">= </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getLocation</span><span class="s2">();</span>
+                        <span class="s1">room</span><span class="s2">.</span><span class="s1">clearEnemy</span><span class="s2">();</span>
+                        <span class="s1">inBattle </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+                        <span class="s1">currentEnemy </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+                        <span class="s0">continue</span><span class="s2">;</span>
+                    <span class="s2">}</span>
+                    <span class="s1">currentEnemy</span><span class="s2">.</span><span class="s1">attack</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">);</span>
+                    <span class="s0">if </span><span class="s2">(!</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">isAlive</span><span class="s2">()) {</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You were defeated... Game over.&quot;</span><span class="s2">);</span>
+                        <span class="s0">return</span><span class="s2">;</span>
+                    <span class="s2">}</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">action</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;heal&quot;</span><span class="s2">)) {</span>
+                    <span class="s1">hero</span><span class="s2">.</span><span class="s1">heal</span><span class="s2">();</span>
+                    <span class="s1">currentEnemy</span><span class="s2">.</span><span class="s1">attack</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">);</span>
+                    <span class="s0">if </span><span class="s2">(!</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">isAlive</span><span class="s2">()) {</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You were defeated... Game over.&quot;</span><span class="s2">);</span>
+                        <span class="s0">return</span><span class="s2">;</span>
+                    <span class="s2">}</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">action</span><span class="s2">.</span><span class="s1">equals</span><span class="s2">(</span><span class="s4">&quot;flee&quot;</span><span class="s2">)) {</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() &lt; </span><span class="s3">0.5</span><span class="s2">) {</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You successfully fled! You return to the start room.&quot;</span><span class="s2">);</span>
+                        <span class="s1">inBattle </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+                        <span class="s1">hero</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">gameMap</span><span class="s2">.</span><span class="s1">getRoom</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+                        <span class="s1">currentEnemy </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+                    <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Failed to flee! The enemy attacks!&quot;</span><span class="s2">);</span>
+                        <span class="s1">currentEnemy</span><span class="s2">.</span><span class="s1">attack</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">);</span>
+                        <span class="s0">if </span><span class="s2">(!</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">isAlive</span><span class="s2">()) {</span>
+                            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You were defeated... Game over.&quot;</span><span class="s2">);</span>
+                            <span class="s0">return</span><span class="s2">;</span>
+                        <span class="s2">}</span>
+                    <span class="s2">}</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;In battle you can only use: attack / heal / flee&quot;</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Game over.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">handleMove</span><span class="s2">(</span><span class="s1">String cmd</span><span class="s2">) {</span>
+        <span class="s1">String</span><span class="s2">[] </span><span class="s1">parts </span><span class="s2">= </span><span class="s1">cmd</span><span class="s2">.</span><span class="s1">split</span><span class="s2">(</span><span class="s4">&quot; &quot;</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">parts</span><span class="s2">.</span><span class="s1">length </span><span class="s2">&lt; </span><span class="s3">2</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Usage: move &lt;direction&gt; (north/south/east/west)&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s1">Direction dir</span><span class="s2">;</span>
+        <span class="s0">switch </span><span class="s2">(</span><span class="s1">parts</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]) {</span>
+            <span class="s0">case </span><span class="s4">&quot;north&quot;</span><span class="s2">: </span><span class="s1">dir </span><span class="s2">= </span><span class="s1">Direction</span><span class="s2">.</span><span class="s1">NORTH</span><span class="s2">; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;south&quot;</span><span class="s2">: </span><span class="s1">dir </span><span class="s2">= </span><span class="s1">Direction</span><span class="s2">.</span><span class="s1">SOUTH</span><span class="s2">; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;east&quot;</span><span class="s2">:  </span><span class="s1">dir </span><span class="s2">= </span><span class="s1">Direction</span><span class="s2">.</span><span class="s1">EAST</span><span class="s2">; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;west&quot;</span><span class="s2">:  </span><span class="s1">dir </span><span class="s2">= </span><span class="s1">Direction</span><span class="s2">.</span><span class="s1">WEST</span><span class="s2">; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">default</span><span class="s2">:</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Invalid direction.&quot;</span><span class="s2">);</span>
+                <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">Room current </span><span class="s2">= </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getLocation</span><span class="s2">();</span>
+        <span class="s0">int </span><span class="s1">newX </span><span class="s2">= </span><span class="s1">current</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+        <span class="s0">int </span><span class="s1">newY </span><span class="s2">= </span><span class="s1">current</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+        <span class="s0">switch </span><span class="s2">(</span><span class="s1">dir</span><span class="s2">) {</span>
+            <span class="s0">case </span><span class="s1">NORTH</span><span class="s2">: </span><span class="s1">newX</span><span class="s2">--; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">SOUTH</span><span class="s2">: </span><span class="s1">newX</span><span class="s2">++; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">EAST</span><span class="s2">:  </span><span class="s1">newY</span><span class="s2">++; </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">WEST</span><span class="s2">:  </span><span class="s1">newY</span><span class="s2">--; </span><span class="s0">break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">Room newRoom </span><span class="s2">= </span><span class="s1">gameMap</span><span class="s2">.</span><span class="s1">getRoom</span><span class="s2">(</span><span class="s1">newX</span><span class="s2">, </span><span class="s1">newY</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">newRoom </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;A wall blocks the way!&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">hero</span><span class="s2">.</span><span class="s1">setLocation</span><span class="s2">(</span><span class="s1">newRoom</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You moved to a new room.&quot;</span><span class="s2">);</span>
+
+        <span class="s1">triggerRoomEvent</span><span class="s2">(</span><span class="s1">newRoom</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s5">// FIX: handle WEAPON type and modify rooms in place (no recreation)</span>
+    <span class="s0">private static void </span><span class="s1">triggerRoomEvent</span><span class="s2">(</span><span class="s1">Room room</span><span class="s2">) {</span>
+        <span class="s0">switch </span><span class="s2">(</span><span class="s1">room</span><span class="s2">.</span><span class="s1">getType</span><span class="s2">()) {</span>
+            <span class="s0">case </span><span class="s1">ENEMY</span><span class="s2">:</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">room</span><span class="s2">.</span><span class="s1">getEnemy</span><span class="s2">() != </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;⚠️ &quot; </span><span class="s2">+ </span><span class="s1">room</span><span class="s2">.</span><span class="s1">getDescription</span><span class="s2">());</span>
+                    <span class="s1">currentEnemy </span><span class="s2">= </span><span class="s1">room</span><span class="s2">.</span><span class="s1">getEnemy</span><span class="s2">();</span>
+                    <span class="s1">inBattle </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;This room once held an enemy, but it's empty now.&quot;</span><span class="s2">);</span>
+                <span class="s2">}</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">REST</span><span class="s2">:</span>
+                <span class="s0">int </span><span class="s1">heal </span><span class="s2">= </span><span class="s1">room</span><span class="s2">.</span><span class="s1">getHealAmount</span><span class="s2">();</span>
+                <span class="s1">hero</span><span class="s2">.</span><span class="s1">sethp</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">min</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">gethp</span><span class="s2">() + </span><span class="s1">heal</span><span class="s2">, </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getmhp</span><span class="s2">()));</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You rested and recovered &quot; </span><span class="s2">+ </span><span class="s1">heal </span><span class="s2">+ </span><span class="s4">&quot; HP. Current HP: &quot; </span><span class="s2">+ </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">gethp</span><span class="s2">());</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">ITEM</span><span class="s2">:</span>
+                <span class="s1">Item item </span><span class="s2">= </span><span class="s1">room</span><span class="s2">.</span><span class="s1">getRewardItem</span><span class="s2">();</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">item </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You found &quot; </span><span class="s2">+ </span><span class="s1">item</span><span class="s2">.</span><span class="s1">getname</span><span class="s2">() + </span><span class="s4">&quot;!&quot;</span><span class="s2">);</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getMyItem</span><span class="s2">() == </span><span class="s0">null</span><span class="s2">) {</span>
+                        <span class="s1">hero</span><span class="s2">.</span><span class="s1">giveItem</span><span class="s2">(</span><span class="s1">item</span><span class="s2">);</span>
+                        <span class="s1">room</span><span class="s2">.</span><span class="s1">clearItem</span><span class="s2">();     </span><span class="s5">// FIX: modify existing room</span>
+                    <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Inventory full, cannot pick up.&quot;</span><span class="s2">);</span>
+                    <span class="s2">}</span>
+                <span class="s2">}</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s1">Weapon</span><span class="s2">:     </span><span class="s5">//</span>
+                <span class="s1">Weapon weapon </span><span class="s2">= </span><span class="s1">room</span><span class="s2">.</span><span class="s1">getRewardWeapon</span><span class="s2">();</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">weapon </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;You found &quot; </span><span class="s2">+ </span><span class="s1">weapon</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s4">&quot;!&quot;</span><span class="s2">);</span>
+                    <span class="s1">hero</span><span class="s2">.</span><span class="s1">equipWeapon</span><span class="s2">(</span><span class="s1">weapon</span><span class="s2">);</span>
+                    <span class="s1">room</span><span class="s2">.</span><span class="s1">clearWeapon</span><span class="s2">();       </span><span class="s5">// FIX: modify existing room</span>
+                <span class="s2">}</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">default</span><span class="s2">:</span>
+                <span class="s0">break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">showStatus</span><span class="s2">() {</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">hero</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getMyWeapon</span><span class="s2">() != </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Equipped weapon: &quot; </span><span class="s2">+ </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getMyWeapon</span><span class="s2">());</span>
+        <span class="s0">else</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;No weapon equipped&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">showInventory</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getMyItem</span><span class="s2">() != </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Item: &quot; </span><span class="s2">+ </span><span class="s1">hero</span><span class="s2">.</span><span class="s1">getMyItem</span><span class="s2">());</span>
+        <span class="s0">else</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;No items carried&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static void </span><span class="s1">showHelp</span><span class="s2">() {</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;===== Commands =====&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;status        - Show character status&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;inventory     - Show carried items&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;move &lt;dir&gt;    - Move (north/south/east/west)&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;quit          - Exit game&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;help          - Show this help&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Battle commands: attack / heal / flee&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;===================&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
